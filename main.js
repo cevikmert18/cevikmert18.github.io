@@ -1,4 +1,4 @@
-// let startTime = new Date();
+
 function comp(a,b) {
     if (a.id>b.id){
         return 1;
@@ -117,7 +117,7 @@ function contTimer(){
         contButton.disabled = true;
         allLinks = document.getElementsByTagName("a");
         for(var i=0;i<allLinks.length;i++){
-            allLinks[i].removeAttribute("pointer-events");
+            allLinks[i].removeAttribute("style");
         }
     }
 }
