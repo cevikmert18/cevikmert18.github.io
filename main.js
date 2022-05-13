@@ -1,4 +1,4 @@
-const startTime = new Date();
+// let startTime = new Date();
 function comp(a,b) {
     if (a.id>b.id){
         return 1;
@@ -8,8 +8,9 @@ function comp(a,b) {
     }
     return 0;
 }
+
 let score = 0;
-let lastTime = 0;
+// let lastTime = 0;
 let lastScore = 0;
 let counter_timer = 0;
 const arr = document.getElementsByTagName("path")
@@ -18,9 +19,12 @@ cities.sort(comp)
 const names = []
 let seenValues = []
 let currentGeneratedRandom = "";
+let gameStatus = true;
+let lastSavedTime = 0;
+let fromPausedToCont = false;
 
 function randomNumberShower(){
-    setInterval(myTimer,100);
+    setInterval(myTimer,1000);
     var currentRandom = parseInt(Math.floor(Math.random() * 81 + 1));
     while(seenValues.includes(currentRandom)){ // if this value is already in the values
         currentRandom=parseInt(Math.floor(Math.random() * 81 + 1));
@@ -56,7 +60,7 @@ function randomNumberShower(){
 randomNumberShower();
 
 function loved(element){
-    if(parseInt(seenValues.length)==81){
+    if(parseInt(seenValues.length)===81){
         finished();
     }
     const pathElement = element.childNodes[1]
@@ -82,9 +86,40 @@ function checker(pressedID){
 }
 
 function myTimer(){
-    const d = new Date();
-    const difference = Math.floor((d.getTime()-startTime.getTime())/1000);
-    document.getElementById("elapsed_time").innerText = "Total Elapsed Time: " +difference.toString();
+    if(gameStatus){
+        lastSavedTime+=1;
+        document.getElementById("elapsed_time").innerText = "Total Elapsed Time: " +lastSavedTime.toString();
+    }
+}
+
+function stopTimer(){
+    if(gameStatus){
+        gameStatus = false;
+        fromPausedToCont = false;
+        allLinks = document.getElementsByTagName("a");
+        let stopperButton = document.getElementsByClassName("stopper")[0];
+        stopperButton.disabled = true;
+        let contButton = document.getElementsByClassName("cont")[0];
+        contButton.disabled = false;
+        for(var i=0;i<allLinks.length;i++){
+            allLinks[i].style="pointer-events: none";
+        }
+    }
+}
+
+function contTimer(){
+    if(!gameStatus){
+        fromPausedToCont=true;
+        gameStatus = true;
+        let stopperButton = document.getElementsByClassName("stopper")[0];
+        stopperButton.disabled = false;
+        let contButton = document.getElementsByClassName("cont")[0];
+        contButton.disabled = true;
+        allLinks = document.getElementsByTagName("a");
+        for(var i=0;i<allLinks.length;i++){
+            allLinks[i].removeAttribute("pointer-events");
+        }
+    }
 }
 
 function finished(){
